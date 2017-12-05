@@ -31,6 +31,24 @@ function showError(message){
 	showErrCnt.innerText = errorCounter;
 }
 
+function addBooks(bTi, bAu){
+	fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${masterKey}&title=${bTi}&author=${bAu}`)
+	.then(function(response){
+		return response.json();
+	})
+	.then(function(add){
+		console.log(add);
+		if(add.status === "error"){
+			showError(add.message);
+			alert(`Something went wrong: ${add.message}`);
+		}
+		else{
+			alert("The book has been added");
+		}
+	});
+}
+
+
 tabAdd.addEventListener("click", function(){
 	tabAdd.className = "marked";
 	tabView.className = "";
@@ -75,8 +93,14 @@ keyBtn.addEventListener("click", function(){
 	})
 })
 
-addBtn.addEventListener("click", function(){
-	fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${masterKey}&title=${addBookTitle.value}&author=${addBookAuthor.value}`)
+addBtn.addEventListener("click", function(event){
+	if(addBookTitle.value === "" || addBookAuthor.value === "") event.preventDefault();
+	else{
+		addBooks(addBookTitle.value, addBookAuthor.value);
+		addBookTitle.value = "";
+		addBookAuthor.value = "";
+	}
+	/*fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${masterKey}&title=${addBookTitle.value}&author=${addBookAuthor.value}`)
 	.then(function(response){
 		return response.json();
 	})
@@ -89,7 +113,7 @@ addBtn.addEventListener("click", function(){
 		else{
 			alert("The book has been added");
 		}
-	})
+	})*/
 })
 
 viewBtn.addEventListener("click", function(){
@@ -198,6 +222,8 @@ googleAddBtn.addEventListener("click", function(event){
 
 	else{
 		let addGoogle = viewGoogle.options[viewGoogle.selectedIndex].text.split(" <> ");
+		addBooks(addGoogle[0], addGoogle[1]);
+		/*
 		fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${masterKey}&title=${addGoogle[0]}&author=${addGoogle[1]}`)
 		.then(function(response){
 			console.log("Titel: " + addGoogle[0] + " Author: " + addGoogle[1]);
@@ -211,6 +237,6 @@ googleAddBtn.addEventListener("click", function(event){
 			else{
 				alert("The book from Google has been added");
 			}
-		});
+		});*/
 	}
 });
