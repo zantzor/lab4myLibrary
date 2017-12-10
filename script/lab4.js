@@ -24,30 +24,21 @@ let googleSrhBtn = document.getElementById("googleSrhBtn");
 let googleAddBtn = document.getElementById("googleAddBtn");
 let errorPara = document.getElementById("errorPara");
 let showErrCnt = document.getElementById("showErrCnt");
+let msgBox = document.createElement("div");
 
-function showError(message){
-	errorCounter++;
-	errorPara.innerText = message;
-	showErrCnt.innerText = errorCounter;
+function showMessage(status, message, section){
+	msgBox.className = "messageBox";
+	section.appendChild(msgBox);
+	if(status === "error"){
+		msgBox.innerText = "Error, try again";
+		errorCounter++;
+		errorPara.innerText = message;
+		showErrCnt.innerText = errorCounter;
+	}
+	else{
+		msgBox.innerText = "Success";
+	}
 }
-
-function addBooks(bTi, bAu){
-	fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${masterKey}&title=${bTi}&author=${bAu}`)
-	.then(function(response){
-		return response.json();
-	})
-	.then(function(add){
-		console.log(add);
-		if(add.status === "error"){
-			showError(add.message);
-			alert(`Something went wrong: ${add.message}`);
-		}
-		else{
-			alert("The book has been added");
-		}
-	});
-}
-
 
 tabAdd.addEventListener("click", function(){
 	tabAdd.className = "marked";
@@ -93,27 +84,27 @@ keyBtn.addEventListener("click", function(){
 	})
 })
 
-addBtn.addEventListener("click", function(event){
-	if(addBookTitle.value === "" || addBookAuthor.value === "") event.preventDefault();
-	else{
-		addBooks(addBookTitle.value, addBookAuthor.value);
-		addBookTitle.value = "";
-		addBookAuthor.value = "";
-	}
-	/*fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${masterKey}&title=${addBookTitle.value}&author=${addBookAuthor.value}`)
+addBtn.addEventListener("click", function(){
+	fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${masterKey}&title=${addBookTitle.value}&author=${addBookAuthor.value}`)
 	.then(function(response){
 		return response.json();
 	})
-	.then(function(add){
-		console.log(add);
-		if(add.status === "error"){
-			showError(add.message);
-			alert(`Something went wrong: ${add.message}`);
+	.then(function(addB){
+		console.log(addB);
+		if(addB.status === "error"){
+			showMessage(addB.status, addB.message, add);
+			setTimeout(() => {
+				add.removeChild(msgBox);
+			}, 3000);
+			//alert(`Something went wrong: ${add.message}`);
 		}
-		else{
-			alert("The book has been added");
+		else{showMessage(addB.status, "", add);
+			setTimeout(() => {
+				add.removeChild(msgBox);
+			}, 3000);
+			//alert("The book has been added");
 		}
-	})*/
+	})
 })
 
 viewBtn.addEventListener("click", function(){
@@ -121,15 +112,18 @@ viewBtn.addEventListener("click", function(){
 	.then(function (response){
 		return response.json();
 	})
-	.then(function(view){
-		console.log(view);
-		if(view.status === "error"){
-			showError(view.message);
-			alert(`Something went wrong: ${view.message}`);
+	.then(function(viewB){
+		
+		if(viewB.status === "error"){
+			showMessage(viewB.status, viewB.message, view);
+			setTimeout(() => {
+				view.removeChild(msgBox)
+			}, 3000);
+			//alert(`Something went wrong: ${view.message}`);
 		}
 		else{
 			viewBooks.innerHTML = "";
-			view.data.forEach(function(book){
+			viewB.data.forEach(function(book){
 				let newOption = document.createElement("option");
 				newOption.value = book.id;
 				newOption.innerText = book.title + " <> " + book.author;
@@ -153,11 +147,18 @@ delBtn.addEventListener("click", function(event){
 		})
 		.then(function(delBook){
 			if(delBook.status === "error"){
-				showError(delBook.message);
-				alert(`Something went wrong: ${delBook.message}`);
+				showMessage(delBook.status, delBook.message, view);
+				setTimeout(() => {
+					view.removeChild(msgBox)
+				}, 3000);
+				//alert(`Something went wrong: ${delBook.message}`);
 			}
 			else{
-				alert("The selected book has been deleted");
+				showMessage(delBook.status, "", view);
+				setTimeout(() => {
+					view.removeChild(msgBox)
+				}, 3000);
+				//alert("The selected book has been deleted");
 			}
 		});
 	}
@@ -178,13 +179,20 @@ viewBooks.addEventListener("click", function(event){
 				return response.json();
 			})
 			.then(function(editBook){
-				if(editBook.message === "error"){
-					showError(editBook.message);
-					alert(`Something went wrong: ${editBook.message}`);
+				if(editBook.status === "error"){
+					showMessage(editBook.status, editBook.message, view);
+					setTimeout(() => {
+						view.removeChild(msgBox)
+					}, 3000);
+					//alert(`Something went wrong: ${editBook.message}`);
 				}
 				else{
 					editDiv.className = "noShow";
-					alert("The selected book has been successfully edited");
+					showMessage(editBook.status, "", view);
+					setTimeout(() => {
+						view.removeChild(msgBox)
+					}, 3000);
+					//alert("The selected book has been successfully edited");
 					console.log(editBookAuthor.value + editBookTitle.value + "id: " + editId);
 				}
 			});
@@ -222,21 +230,26 @@ googleAddBtn.addEventListener("click", function(event){
 
 	else{
 		let addGoogle = viewGoogle.options[viewGoogle.selectedIndex].text.split(" <> ");
-		addBooks(addGoogle[0], addGoogle[1]);
-		/*
 		fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${masterKey}&title=${addGoogle[0]}&author=${addGoogle[1]}`)
 		.then(function(response){
 			console.log("Titel: " + addGoogle[0] + " Author: " + addGoogle[1]);
 			return response.json();
 		})
 		.then(function(gBook){
-			if(gBook.message === "error"){
-				showError(gBook.message);
-				alert(`Something went wrong: ${gBook.message}`);
+			if(gBook.status === "error"){
+				showMessage(gBook.status, gBook.message, google);
+				setTimeout(() => {
+					google.removeChild(msgBox)
+				}, 3000);
+				//alert(`Something went wrong: ${gBook.message}`);
 			}
 			else{
-				alert("The book from Google has been added");
+				showMessage(gBook.status, "", google);
+				setTimeout(() => {
+					google.removeChild(msgBox)
+				}, 3000);
+				//alert("The book from Google has been added");
 			}
-		});*/
+		});
 	}
 });
