@@ -1,127 +1,132 @@
 body {
-			background: radial-gradient(#0B1135, #0E0B16);
-			margin: 0;
-			padding: 0;
-		}
+	background: radial-gradient(#0B1135, #0E0B16);
+	margin: 0;
+	padding: 0;
+}
 
-		*{
-			font-family: roboto;
-			color: #EADEE0;
-			text-align: center;
-			
-		}
-		header{
-			display: flex;
-			flex-direction: row;
-		}
+*{
+	font-family: roboto;
+	color: #EADEE0;
+	text-align: center;
+	
+}
+header{
+	display: flex;
+	flex-direction: row;
+}
 
-		header > div{
-			display: flex;
-			height: 40px;
-			justify-content: center;
-			align-items: center;
-		}
+header > div{
+	display: flex;
+	height: 40px;
+	justify-content: center;
+	align-items: center;
+}
 
-		header > div:first-child{
-			background-color: transparent;
-			flex: 1;
+header > div:first-child{
+	background-color: transparent;
+	flex: 1;
 
-		}
-		main div{
-			margin: 0 auto;
-		}
+}
+main div{
+	margin: 0 auto;
+}
 
-		#add, #api{
-			background-color: transparent;
-		}
-		
-		header > div:nth-child(2){
-			background-color: transparent;
-			flex: 2
-		}
-		
-		#view, #google{
-			background-color: transparent;
-		}
+#add, #api{
+	background-color: transparent;
+}
 
-		header > div:last-child{
-			background-color: transparent;
-			flex: 1;
-		}
+header > div:nth-child(2){
+	background-color: transparent;
+	flex: 2
+}
 
-		header > div:hover{
-			background-color: #EADEE0;
-			color: #0E0B16;
-		}
+#view, #google{
+	background-color: transparent;
+}
 
-		.marked{
-			background-color: #EADEE0 !important;
-			color: #0E0B16;
-		}
+header > div:last-child{
+	background-color: transparent;
+	flex: 1;
+}
 
-		#errors{
-			background-color: transparent;
-		}
+header > div:hover{
+	background-color: #EADEE0;
+	color: #0E0B16;
+}
 
-		input{
-			margin: 5px;
-			box-shadow: 0 1px 20px black;
-			border-radius: 5px;
-			color: #0E0B16;
+.marked{
+	background-color: #EADEE0 !important;
+	color: #0E0B16;
+}
 
-		}
+#errors{
+	background-color: transparent;
+}
 
-		select{
-			box-shadow: 0 1px 20px #A33ACB;
-			margin: 5px;
-		}
+.messageBox{
+	width: 200px;
+	height: 50px;
+}
 
-		option{
-			color: #0E0B16;
-		}
+input{
+	margin: 5px;
+	box-shadow: 0 1px 20px black;
+	border-radius: 5px;
+	color: #0E0B16;
 
-		button{
-			color: white;
-			background-color: #A33ACB;
-			border-radius: 5px;
-			border-color: #A33ACB;
-			box-shadow: 0 1px 20px black;
-			margin: 5px;
-			padding: 5px;
-		}
+}
 
-		.library{
-			background-color: transparent;
-			margin: 0 auto;
-			width: 500px;
-			height: 900px;	
-		}
-		
-		#viewBooks{
-			height: 200px;
-			width: 400px;
-		}
+select{
+	box-shadow: 0 1px 20px #A33ACB;
+	margin: 5px;
+}
 
-		#viewGoogle{
-			width: 400px;
-		}
-		
-		#editDiv{
-			width: 300px;
-			height: 200px;
-		}
+option{
+	color: #0E0B16;
+}
 
-		.noShow{
-			display: none;
-		}
+button{
+	color: white;
+	background-color: #A33ACB;
+	border-radius: 5px;
+	border-color: #A33ACB;
+	box-shadow: 0 1px 20px black;
+	margin: 5px;
+	padding: 5px;
+}
 
-		.show{
-			display: block;
+.library{
+	background-color: transparent;
+	margin: 0 auto;
+	width: 500px;
+	height: 900px;	
+}
 
-		}
+#viewBooks{
+	height: 200px;
+	width: 400px;
+}
 
-		@media screen and (max-width: 500px){
-			header{
-				flex-direction: column;
-			}
-		}
+#viewGoogle{
+	width: 400px;
+}
+
+#editDiv{
+	width: 300px;
+	height: 200px;
+}
+
+.noShow{
+	display: none;
+}
+
+.show{
+	display: block;
+
+}
+
+@media screen and (max-width: 500px){
+	header{
+		flex-direction: column;
+	}
+}
