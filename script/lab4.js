@@ -29,6 +29,9 @@ let msgBox = document.createElement("div");
 function showMessage(status, message, section){
 	msgBox.className = "messageBox";
 	section.appendChild(msgBox);
+	addBtn.disabled = true;
+	viewBtn.disabled = true;
+	delBtn.disabled = true;
 	if(status === "error"){
 		msgBox.innerText = "Error, try again";
 		errorCounter++;
@@ -95,15 +98,24 @@ addBtn.addEventListener("click", function(){
 			showMessage(addB.status, addB.message, add);
 			setTimeout(() => {
 				add.removeChild(msgBox);
+				addBtn.disabled = false;
+				viewBtn.disabled = false;
+				delBtn.disabled = false;
 			}, 3000);
 			//alert(`Something went wrong: ${add.message}`);
 		}
-		else{showMessage(addB.status, "", add);
+		else{
+			addBtn.disabled = true;
+			showMessage(addB.status, "", add);
 			setTimeout(() => {
 				add.removeChild(msgBox);
+				addBtn.disabled = false;
+				viewBtn.disabled = false;
+				delBtn.disabled = false;
 			}, 3000);
 			//alert("The book has been added");
 		}
+		
 	})
 })
 
@@ -115,10 +127,16 @@ viewBtn.addEventListener("click", function(){
 	.then(function(viewB){
 		
 		if(viewB.status === "error"){
+			
 			showMessage(viewB.status, viewB.message, view);
 			setTimeout(() => {
-				view.removeChild(msgBox)
-			}, 3000);
+
+				view.removeChild(msgBox);
+				addBtn.disabled = false;
+				viewBtn.disabled = false;
+				delBtn.disabled = false;
+			}, 2000);
+
 			//alert(`Something went wrong: ${view.message}`);
 		}
 		else{
@@ -150,6 +168,9 @@ delBtn.addEventListener("click", function(event){
 				showMessage(delBook.status, delBook.message, view);
 				setTimeout(() => {
 					view.removeChild(msgBox)
+					addBtn.disabled = false;
+					viewBtn.disabled = false;
+					delBtn.disabled = false;
 				}, 3000);
 				//alert(`Something went wrong: ${delBook.message}`);
 			}
@@ -157,6 +178,9 @@ delBtn.addEventListener("click", function(event){
 				showMessage(delBook.status, "", view);
 				setTimeout(() => {
 					view.removeChild(msgBox)
+					addBtn.disabled = false;
+					viewBtn.disabled = false;
+					delBtn.disabled = false;
 				}, 3000);
 				//alert("The selected book has been deleted");
 			}
