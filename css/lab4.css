@@ -22,7 +22,7 @@ header{
 
 .disabled{
 	color: grey;
-	background-color: lightgrey
+	background-color: lightgrey;
 }
 
 header > div{
