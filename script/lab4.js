@@ -24,22 +24,30 @@ let googleSrhBtn = document.getElementById("googleSrhBtn");
 let googleAddBtn = document.getElementById("googleAddBtn");
 let errorPara = document.getElementById("errorPara");
 let showErrCnt = document.getElementById("showErrCnt");
-let msgBox = document.createElement("div");
+let addInfo = document.getElementById("addInfo");
+let booksInfo = document.getElementById("booksInfo");
+let googleInfo = document.getElementById("googleInfo");
+
 
 function showMessage(status, message, section){
-	msgBox.className = "messageBox";
-	section.appendChild(msgBox);
-	addBtn.disabled = true;
-	viewBtn.disabled = true;
-	delBtn.disabled = true;
 	if(status === "error"){
-		msgBox.innerText = "Error, try again";
 		errorCounter++;
 		errorPara.innerText = message;
 		showErrCnt.innerText = errorCounter;
 	}
 	else{
-		msgBox.innerText = "Success";
+		console.log(section);
+		switch(section){
+			case "add":
+				addInfo.innerText = "Success";
+				break;
+			case "google":
+				googleInfo.innerText = "Success";
+				break;
+			case "view":
+				booksInfo.innerText = "Success";
+				break;
+		}
 	}
 }
 
@@ -82,62 +90,47 @@ keyBtn.addEventListener("click", function(){
 		return response.json();
 	})
 	.then(function(keyNr){
-		//console.log(keyNr);
 		key.value = keyNr.key;
 	})
 })
 
-addBtn.addEventListener("click", function(){
-	fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${masterKey}&title=${addBookTitle.value}&author=${addBookAuthor.value}`)
+
+function addFetch(event, addTitle, addAuthor, origin){
+	fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${masterKey}&title=${addTitle}&author=${addAuthor}`)
 	.then(function(response){
 		return response.json();
 	})
 	.then(function(addB){
 		console.log(addB);
 		if(addB.status === "error"){
-			showMessage(addB.status, addB.message, add);
-			setTimeout(() => {
-				add.removeChild(msgBox);
-				addBtn.disabled = false;
-				viewBtn.disabled = false;
-				delBtn.disabled = false;
-			}, 3000);
-			//alert(`Something went wrong: ${add.message}`);
+			showMessage(addB.status, addB.message, origin);
+			addFetch(event, addTitle, addAuthor, origin);
 		}
 		else{
-			addBtn.disabled = true;
-			showMessage(addB.status, "", add);
-			setTimeout(() => {
-				add.removeChild(msgBox);
-				addBtn.disabled = false;
-				viewBtn.disabled = false;
-				delBtn.disabled = false;
-			}, 3000);
-			//alert("The book has been added");
+			showMessage(addB.status, "", origin);
+			event.target.className = "enabled";
+			event.target.disabled = false;
 		}
-		
 	})
+}
+
+addBtn.addEventListener("click", function(event){
+	event.target.className = "disabled";
+	event.target.disabled = true;
+	addInfo.innerText = "";
+	addFetch(event, addBookTitle.value, addBookAuthor.value, "add");
 })
 
-viewBtn.addEventListener("click", function(){
+function bookFetch(event){
+	booksInfo.innerText = "";
 	fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=select&key=${masterKey}`)
 	.then(function (response){
 		return response.json();
 	})
 	.then(function(viewB){
-		
 		if(viewB.status === "error"){
-			
-			showMessage(viewB.status, viewB.message, view);
-			setTimeout(() => {
-
-				view.removeChild(msgBox);
-				addBtn.disabled = false;
-				viewBtn.disabled = false;
-				delBtn.disabled = false;
-			}, 2000);
-
-			//alert(`Something went wrong: ${view.message}`);
+			showMessage(viewB.status, viewB.message, "view");
+			bookFetch(event);
 		}
 		else{
 			viewBooks.innerHTML = "";
@@ -146,51 +139,56 @@ viewBtn.addEventListener("click", function(){
 				newOption.value = book.id;
 				newOption.innerText = book.title + " <> " + book.author;
 				viewBooks.appendChild(newOption);
+				event.target.className = "enabled";
+				event.target.disabled = false;
 				console.log(book);
 				console.log(view.data);
 				console.log("Book title: " + book.title);
-				//viewBooks.innerHTML += book.title +" by " + book.author + "<br>";
 			})
 		}
 	});
+}
+
+viewBtn.addEventListener("click", function(event){
+	event.target.className = "disabled";
+	event.target.disabled = true;
+	bookFetch(event);
+	
 });
 
-delBtn.addEventListener("click", function(event){
-	if(viewBooks.options[viewBooks.selectedIndex] === undefined) event.preventDefault();
-	else{
-		let delId = viewBooks.options[viewBooks.selectedIndex].value;
-		fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=delete&key=${masterKey}&id=${delId}`)
+
+function delFetch(event, id){
+	fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=delete&key=${masterKey}&id=${id}`)
 		.then(function(response){
 			return response.json();
 		})
 		.then(function(delBook){
 			if(delBook.status === "error"){
-				showMessage(delBook.status, delBook.message, view);
-				setTimeout(() => {
-					view.removeChild(msgBox)
-					addBtn.disabled = false;
-					viewBtn.disabled = false;
-					delBtn.disabled = false;
-				}, 3000);
-				//alert(`Something went wrong: ${delBook.message}`);
+				showMessage(event, delBook.status, delBook.message, "view");
+				delFetch(event, id);
 			}
 			else{
-				showMessage(delBook.status, "", view);
-				setTimeout(() => {
-					view.removeChild(msgBox)
-					addBtn.disabled = false;
-					viewBtn.disabled = false;
-					delBtn.disabled = false;
-				}, 3000);
-				//alert("The selected book has been deleted");
+				showMessage(delBook.status, "", "view");
+				event.target.className = "enabled";
+				event.target.disabled = false;
 			}
 		});
+}
+
+delBtn.addEventListener("click", function(event){
+	booksInfo.innerText = "";
+	if(viewBooks.options[viewBooks.selectedIndex] === undefined) event.preventDefault();
+	else{
+		event.target.className = "disabled";
+		event.target.disabled = true;
+		let delId = viewBooks.options[viewBooks.selectedIndex].value;
+		delFetch(event, delId);
 	}
 })
 
 viewBooks.addEventListener("click", function(event){
+	booksInfo.innerText = "";
 	if(viewBooks.options[viewBooks.selectedIndex] === undefined) event.preventDefault();
-	
 	else{
 		let editId = viewBooks.options[viewBooks.selectedIndex].value;
 		let book = viewBooks.options[viewBooks.selectedIndex].text.split(" <> ");
@@ -198,31 +196,27 @@ viewBooks.addEventListener("click", function(event){
 		editBookAuthor.placeholder = book[1];
 		editDiv.className = "show";
 		editBookAuthor.addEventListener("blur", function(){
-			fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=update&key=${masterKey}&id=${editId}&title=${editBookTitle.value}&author=${editBookAuthor.value}`)
+			editFetch(editBookTitle.value, editBookAuthor.value, editId);		
+		});
+	}
+});
+
+function editFetch(editTitle, editAuthor, id){
+	fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=update&key=${masterKey}&id=${id}&title=${editTitle}&author=${editAuthor}`)
 			.then(function (response){
 				return response.json();
 			})
 			.then(function(editBook){
 				if(editBook.status === "error"){
-					showMessage(editBook.status, editBook.message, view);
-					setTimeout(() => {
-						view.removeChild(msgBox)
-					}, 3000);
-					//alert(`Something went wrong: ${editBook.message}`);
+					showMessage(editBook.status, editBook.message, "view");
+					editFetch(editTitle, editAuthor);
 				}
 				else{
 					editDiv.className = "noShow";
-					showMessage(editBook.status, "", view);
-					setTimeout(() => {
-						view.removeChild(msgBox)
-					}, 3000);
-					//alert("The selected book has been successfully edited");
-					console.log(editBookAuthor.value + editBookTitle.value + "id: " + editId);
+					showMessage(editBook.status, "", "view");
 				}
 			});
-		});
-	}
-});
+}
 
 googleSrhBtn.addEventListener("click", function(event){
 	if(googleSrh.value === "") event.preventDefault();
@@ -250,30 +244,12 @@ googleSrhBtn.addEventListener("click", function(event){
 })
 
 googleAddBtn.addEventListener("click", function(event){
+	googleInfo.innerText = "";
+	event.target.className = "disabled";
+	event.target.disabled = true;
 	if(viewGoogle.options[viewGoogle.selectedIndex] === undefined) event.preventDefault();
-
 	else{
 		let addGoogle = viewGoogle.options[viewGoogle.selectedIndex].text.split(" <> ");
-		fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${masterKey}&title=${addGoogle[0]}&author=${addGoogle[1]}`)
-		.then(function(response){
-			console.log("Titel: " + addGoogle[0] + " Author: " + addGoogle[1]);
-			return response.json();
-		})
-		.then(function(gBook){
-			if(gBook.status === "error"){
-				showMessage(gBook.status, gBook.message, google);
-				setTimeout(() => {
-					google.removeChild(msgBox)
-				}, 3000);
-				//alert(`Something went wrong: ${gBook.message}`);
-			}
-			else{
-				showMessage(gBook.status, "", google);
-				setTimeout(() => {
-					google.removeChild(msgBox)
-				}, 3000);
-				//alert("The book from Google has been added");
-			}
-		});
+		addFetch(event, addGoogle[0], addGoogle[1], "google");
 	}
 });

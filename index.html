@@ -4,8 +4,8 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="css/lab4.css">
-	<script type="text/javascript" src="script/lab4.js" defer="true"></script>
+	<link rel="stylesheet" type="text/css" href="lab4.css">
+	<script type="text/javascript" src="lab4.js" defer="true"></script>
 	<title>Library</title>
 	
 </head>
@@ -18,18 +18,20 @@
 		</header>
 		<main>
 			<div id="api"><h3>Generate Api-key</h3>
-				<input type="text" id="keyText"><br/>
+				<input type="text" id="keyText">
 				<button id="keyBtn">Generate key</button>
 			</div>
 			<div id="add"><h3>Add book</h3>
 				<input type="text" id="addBookTitle" placeholder="Book title"></input>
-				<input type="text" id="addBookAuthor" placeholder="Author's name"></input><br/>
+				<input type="text" id="addBookAuthor" placeholder="Author's name"></input>
 				<button id="addBtn">Add</button>
+				<p id="addInfo"></p>
 			</div>
 			<div id="view" class="noShow"><h3>View books</h3>
 				<p>Click a book to edit</p>
 				<select id="viewBooks" size="4"></select><br/>
 				<button id="viewBtn">Show all</button><!--<button id="editBtn">Edit book</button>--><button id="delBtn">Delete book</button>
+				<p id="booksInfo"></p>
 				<div id="editDiv" class="noShow">
 					<h3>Edit book</h3>
 					<p>Leave the author field to confirm the edit</p>
@@ -46,6 +48,7 @@
 				<input type="text" id="googleSrh" placeholder="Book name"><br/>
 				<button id="googleSrhBtn">Google search</button>
 				<button id="googleAddBtn">Add book</button>
+				<p id="googleInfo"></p>
 
 			</div>
 			<div id="errors" class="noShow">

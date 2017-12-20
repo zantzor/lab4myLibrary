@@ -15,6 +15,16 @@ header{
 	flex-direction: row;
 }
 
+.enabled{
+	color: white;
+	border-color: #A33ACB;
+}
+
+.disabled{
+	color: grey;
+	background-color: lightgrey
+}
+
 header > div{
 	display: flex;
 	height: 40px;
